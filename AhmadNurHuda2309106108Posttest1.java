@@ -508,7 +508,7 @@ public class AhmadNurHuda2309106108Posttest1 {
         	        if (t.getIdTim() == id_tim && id_tim != pemain.getIdTim()) {
         	            t.setJumlahPemain(t.getJumlahPemain() + 1);
         	            if (t2 != null) {
-            	                t2.setJumlahPemain(t2.getJumlahPemain() - 1);
+            	            t2.setJumlahPemain(t2.getJumlahPemain() - 1);
         	            }
         	            break;
         	        }
