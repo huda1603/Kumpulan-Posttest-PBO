@@ -503,14 +503,16 @@ public class AhmadNurHuda2309106108Posttest1 {
         	    }
         	    System.out.print("Pilih Tim Berdasarkan ID: ");
         	    id_tim = scanner.nextInt();
-    	    }
-    	    
-    	    for (Tim t : timList) {
-    	        if (t.getIdTim() == id_tim && id_tim != pemain.getIdTim() && pemain.getIdTim() != 0) {
-    	            t.setJumlahPemain(t.getJumlahPemain() + 1);
-    	            t2.setJumlahPemain(t2.getJumlahPemain() - 1);
-    	            break;
-    	        }
+        	    
+        	    for (Tim t : timList) {
+        	        if (t.getIdTim() == id_tim && id_tim != pemain.getIdTim()) {
+        	            t.setJumlahPemain(t.getJumlahPemain() + 1);
+        	            if (t2 != null) {
+            	                t2.setJumlahPemain(t2.getJumlahPemain() - 1);
+        	            }
+        	            break;
+        	        }
+        	    }
     	    }
     	    
     	    pemain.setNama(nama);
@@ -738,6 +740,7 @@ public class AhmadNurHuda2309106108Posttest1 {
     	        p.tampilkanInfo();
     	    }
     	    System.out.println("===========================");
+    	    System.out.println("Apabila Pelatih Dihapus, Maka Tim Yang Dilatih Pelatih Tersebut Tidak Akan Memiliki Pelatih Alias Tidak Ada Keterangan");
     	    System.out.print("Pilih Pelatih Yang Akan Dihapus Berdasarkan ID: ");
     	    int id_pelatih = scanner.nextInt();
     	    boolean isDelete = listEntitas.deletePelatih(id_pelatih);
@@ -763,6 +766,7 @@ public class AhmadNurHuda2309106108Posttest1 {
     	        o.tampilkanInfo();
     	    }
     	    System.out.println("===========================");
+    	    System.out.println("Apabila Jenis Olahraga Dihapus, Maka Tim Yang Berjenis Olahraga Tersebut Tidak Akan Memiliki Jenis Olahraga, Begitu Juga Dengan Jadwal Latihan");
     	    System.out.print("Pilih Olahraga Yang Akan Dihapus Berdasarkan ID: ");
     	    int id_olahraga = scanner.nextInt();
     	    boolean isDelete = listEntitas.deleteOlahraga(id_olahraga);
