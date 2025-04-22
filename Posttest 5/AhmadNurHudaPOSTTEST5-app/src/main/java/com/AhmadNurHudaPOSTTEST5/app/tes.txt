@@ -1,0 +1,866 @@
+package com.AhmadNurHudaPOSTTEST5.app;
+
+import java.util.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class App {
+	public static void main(String[] args) {
+		ListEntitas listEntitas = new ListEntitas();
+		ListPengguna listPengguna = new ListPengguna();
+		Scanner scanner = new Scanner(System.in);
+		menu(scanner, listEntitas, listPengguna);
+	}
+	
+	public static void tampilkanSemuaData(ListEntitas listEntitas) {
+	    List<Tim> listTim = listEntitas.semuaTim();
+	    List<Pemain> listPemain = listEntitas.semuaPemain();
+	    List<Pelatih> listPelatih = listEntitas.semuaPelatih();
+	    List<Manajer> listManajer = listEntitas.semuaManajer();
+	    List<Olahraga> listOlahraga = listEntitas.semuaOlahraga();
+	    List<JadwalLatihan> listJadwal = listEntitas.semuaJadwalLatihan();
+	    
+	    System.out.println("===========================");
+	    System.out.println("Semua Data Sistem Manajemen Klub Olahraga");
+	    System.out.println("============Tim============");
+	    if (listTim.isEmpty()) {
+	        System.out.println("Tidak Ada Tim Dalam List");
+	    }
+	    else {
+	        for (Tim tim : listTim) {
+    	        tim.tampilkanInfo(listPelatih, listManajer, listOlahraga);
+    	    }
+	    }
+	    System.out.println("============Pemain============");
+	    if (listPemain.isEmpty()) {
+	        System.out.println("Tidak Ada Pemain Dalam List");
+	    }
+	    else {
+    	    for (Pemain pemain : listPemain) {
+    	        pemain.tampilkanInfo(listTim);
+    	    }
+	    }
+	    System.out.println("============Pelatih============");
+	    if (listPelatih.isEmpty()) {
+	        System.out.println("Tidak Ada Pelatih Dalam List");
+	    }
+	    else {
+    	    for (Pelatih pelatih : listPelatih) {
+    	        pelatih.tampilkanInfo();
+    	    }
+	    }
+	    System.out.println("============Manajer============");
+	    if (listManajer.isEmpty()) {
+	        System.out.println("Tidak Ada Manajer Dalam List");
+	    }
+	    else {
+    	    for (Manajer manajer : listManajer) {
+    	        manajer.tampilkanInfo();
+    	    }
+	    }
+	    System.out.println("============Olahraga============");
+	    if (listOlahraga.isEmpty()) {
+	        System.out.println("Tidak Ada Olahraga Dalam List");
+	    }
+	    else {
+    	    for (Olahraga olahraga : listOlahraga) {
+    	        olahraga.tampilkanInfo();
+    	    }
+	    }
+	    System.out.println("============Jadwal Latihan============");
+	    if (listJadwal.isEmpty()) {
+	        System.out.println("Tidak Ada Jadwal Latihan Dalam List");
+	    }
+	    else {
+    	    for (JadwalLatihan jadwal : listJadwal) {
+    	        jadwal.tampilkanInfo(listTim, listOlahraga);
+    	    }
+	    }
+	    System.out.println("===========================");
+	}
+	public static void tambahTimBaru(Scanner scanner, ListEntitas listEntitas) {
+	    int id_pelatih;
+	    int id_manajer;
+	    int id_olahraga;
+	    int Count = 1;
+	    List<Pelatih> pelatihList = listEntitas.semuaPelatih();
+	    List<Manajer> manajerList = listEntitas.semuaManajer();
+	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+	    System.out.println("===========================");
+	    System.out.println("Tambah Tim Baru");
+	    System.out.println("===========================");
+	    System.out.print("Nama Tim: ");
+	    String nama = scanner.next();
+	    System.out.print("Kota Asal: ");
+	    String kota_asal = scanner.next();
+	    if (pelatihList.isEmpty()) {
+	        id_pelatih = 0;
+	    }
+	    else {
+    	    for (Pelatih p : pelatihList) {
+    	        System.out.println("[" + Integer.toString(Count) + "]. " + p.getNama() + ", ID: " + Integer.toString(p.getIdPelatih()));
+    	        Count++;
+    	    }
+    	    System.out.print("Pilih Pelatih Berdasarkan ID: ");
+    	    id_pelatih = scanner.nextInt();
+	    }
+	    Count = 1;
+	    if (manajerList.isEmpty()) {
+	        id_manajer = 0;
+	    }
+	    else {
+    	    for (Manajer m : manajerList) {
+    	        System.out.println("[" + Count + "]. " + m.getNama() + ", ID: " + Integer.toString(m.getIdManajer()));
+    	        Count++;
+    	    }
+    	    System.out.print("Pilih Manajer Berdasarkan ID: ");
+    	    id_manajer= scanner.nextInt();
+	    }
+	    Count = 1;
+	    if (olahragaList.isEmpty()) {
+	        id_olahraga = 0;
+	    }
+	    else {
+    	    for (Olahraga o : olahragaList) {
+    	        System.out.println("[" + Count + "]. " + o.getNamaOlahraga() + ", ID: " + Integer.toString(o.getIdOlahraga()));
+    	        Count++;
+    	    }
+    	    System.out.print("Pilih Olahraga Berdasarkan ID: ");
+    	    id_olahraga = scanner.nextInt();
+	    }
+	    Tim tim = new Tim(0, nama, kota_asal, id_olahraga, 0, id_pelatih, id_manajer);
+	    listEntitas.tambahTim(tim);
+	    System.out.println("Berhasil Menambah Tim");
+	    System.out.println("===========================");
+	}
+	public static void tambahPemainBaru(Scanner scanner, ListEntitas listEntitas) {
+	    int id_tim = 0;
+	    int Count = 1;
+	    String posisi = null;
+	    List<Tim> timList = listEntitas.semuaTim();
+	    System.out.println("===========================");
+	    System.out.println("Tambah Pemain Baru");
+	    System.out.println("===========================");
+	    System.out.print("Nama Pemain: ");
+	    String nama = scanner.next();
+	    System.out.print("Usia: ");
+	    int usia = scanner.nextInt();
+	    scanner.nextLine();
+	    System.out.print("Nomor Telepon: ");
+	    String nomor = scanner.next();
+	    if (timList.isEmpty() == false) {
+    	    for (Tim t : timList) {
+    	        System.out.println("[" + Count + "]. " + t.getNamaTim() + ", ID: " + t.getIdTim());
+    	        Count++;
+    	    }
+    	    System.out.print("Pilih Tim Berdasarkan ID: ");
+    	    id_tim = scanner.nextInt();
+    	    scanner.nextLine();
+    	    System.out.print("Posisi Pemain: ");
+    	    posisi = scanner.next();
+	    }
+	    if (posisi != null) {
+	        Pemain pemain = new Pemain(nama, usia, posisi, nomor, id_tim);
+	        listEntitas.tambahPemain(pemain);
+	    }
+	    else {
+	        Pemain pemain = new Pemain(nama, usia, nomor);
+	        listEntitas.tambahPemain(pemain);
+	    }
+	    System.out.println("Berhasil Menambah Pemain");
+	    System.out.println("===========================");
+	}
+	public static void tambahPelatihBaru(Scanner scanner, ListEntitas listEntitas) {
+	    System.out.println("===========================");
+	    System.out.println("Tambah Pelatih Baru");
+	    System.out.println("===========================");
+	    System.out.print("Nama Pelatih: ");
+	    String nama = scanner.next();
+	    System.out.print("Usia: ");
+	    int usia = scanner.nextInt();
+	    scanner.nextLine();
+	    System.out.print("Nomor Telepon: ");
+	    String nomor = scanner.next();
+	    Pelatih pelatih = new Pelatih(0, nama, usia, nomor);
+	    listEntitas.tambahPelatih(pelatih);
+	    System.out.println("Berhasil Menambah Pelatih");
+	    System.out.println("===========================");
+	}
+	public static void tambahManajerBaru(Scanner scanner, ListEntitas listEntitas) {
+	    System.out.println("===========================");
+	    System.out.println("Tambah Manajer Baru");
+	    System.out.println("===========================");
+	    System.out.print("Nama Manajer: ");
+	    String nama = scanner.next();
+	    System.out.print("Usia: ");
+	    int usia = scanner.nextInt();
+	    scanner.nextLine();
+	    System.out.print("Nomor Telepon: ");
+	    String nomor = scanner.next();
+	    Manajer manajer = new Manajer(0, nama, usia, nomor);
+	    listEntitas.tambahManajer(manajer);
+	    System.out.println("Berhasil Menambah Manajer");
+	    System.out.println("===========================");
+	}
+	public static void tambahOlahragaBaru(Scanner scanner, ListEntitas listEntitas) {
+	    System.out.println("===========================");
+	    System.out.println("Tambah Olahraga Baru");
+	    System.out.println("===========================");
+	    System.out.print("Nama Olahraga: ");
+	    String nama = scanner.next();
+	    Olahraga olahraga = new Olahraga(0, nama);
+	    listEntitas.tambahOlahraga(olahraga);
+	    System.out.println("Berhasil Menambah Olahraga");
+	    System.out.println("===========================");
+	}
+	public static void tambahJadwalBaru(Scanner scanner, ListEntitas listEntitas) {
+	    int id_tim, id_olahraga;
+	    int Count = 1;
+	    List<Tim> timList = listEntitas.semuaTim();
+	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+	    System.out.println("===========================");
+	    System.out.println("Tambah Jadwal Baru");
+	    System.out.println("===========================");
+	    System.out.print("Tanggal: ");
+	    String tanggal = scanner.next();
+	    System.out.print("Waktu: ");
+	    String waktu = scanner.next();
+	    System.out.print("Lokasi: ");
+	    String lokasi = scanner.next();
+        if (timList.isEmpty()) {
+	        id_tim = 0;
+	    }
+	    else {	    
+    	    for (Tim t : timList) {
+    	        System.out.println("[" + Count + "]. " + t.getNamaTim() + ", ID: " + t.getIdTim());
+    	        Count++;
+    	    }
+    	    System.out.print("Pilih Tim Berdasarkan ID: ");
+    	    id_tim = scanner.nextInt();
+	    }
+	    
+	    Count = 1;
+	    if (olahragaList.isEmpty()) {
+	        id_olahraga = 0;
+	    }
+	    else {
+    	    for (Olahraga o : olahragaList) {
+    	        System.out.println("[" + Count + "]. " + o.getNamaOlahraga() + ", ID: " + o.getIdOlahraga());
+    	        Count++;
+    	    }
+    	    System.out.print("Pilih Olahraga Berdasarkan ID: ");
+    	    id_olahraga = scanner.nextInt();
+	    }
+	    JadwalLatihan jadwal = new JadwalLatihan(0, tanggal, waktu, lokasi, id_tim, id_olahraga);
+	    listEntitas.tambahJadwalLatihan(jadwal);
+	    System.out.println("Berhasil Menambah Jadwal Latihan");
+	    System.out.println("===========================");
+	}
+	public static void tampilkanDataTim(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaTim().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("Tidak Ada Tim Dalam List");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Pelatih> pelatihList = listEntitas.semuaPelatih();
+    	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+    	    List<Manajer> manajerList = listEntitas.semuaManajer();
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Tim Berdasarkan ID: ");
+    	    int id_tim = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Tim tim = listEntitas.tampilkanTim(id_tim).orElse(null);
+    	    tim.tampilkanInfo(pelatihList, manajerList, olahragaList);
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void tampilkanDataPemain(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaPemain().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("Tidak Ada Pemain Dalam List");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Tim> timList = listEntitas.semuaTim();
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Pemain Berdasarkan ID: ");
+    	    int id_pemain = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Pemain pemain = listEntitas.tampilkanPemain(id_pemain).orElse(null);
+    	    pemain.tampilkanInfo(timList);
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void tampilkanDataPelatih(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaPelatih().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("Tidak Ada Pelatih Dalam List");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Pelatih Berdasarkan ID: ");
+    	    int id_pelatih = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Pelatih pelatih = listEntitas.tampilkanPelatih(id_pelatih).orElse(null);
+    	    pelatih.tampilkanInfo();
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void tampilkanDataManajer(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaManajer().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("Tidak Ada Manajer Dalam List");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Manajer Berdasarkan ID: ");
+    	    int id_manajer = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Manajer manajer = listEntitas.tampilkanManajer(id_manajer).orElse(null);
+    	    manajer.tampilkanInfo();
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void tampilkanDataOlahraga(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaOlahraga().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("Tidak Ada Jenis Olahraga Dalam List");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Olahraga Berdasarkan ID: ");
+    	    int id_olahraga = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Olahraga olahraga = listEntitas.tampilkanOlahraga(id_olahraga).orElse(null);
+    	    olahraga.tampilkanInfo();
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void tampilkanDataJadwal(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaJadwalLatihan().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("Tidak Ada Jadwal Latihan Dalam List");
+	        System.out.println("===========================");
+	    }
+	    else { 
+    	    List<Tim> timList = listEntitas.semuaTim();
+    	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Jadwal Berdasarkan ID: ");
+    	    int id_jadwal = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    JadwalLatihan jadwal = listEntitas.tampilkanJadwalLatihan(id_jadwal).orElse(null);
+    	    jadwal.tampilkanInfo(timList, olahragaList);
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void editDataTim(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaTim().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    int id_pelatih, id_olahraga, id_manajer;
+    	    int Count = 1;
+    	    List<Tim> timList = listEntitas.semuaTim();
+    	    List<Pelatih> pelatihList = listEntitas.semuaPelatih();
+    	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+    	    List<Manajer> manajerList = listEntitas.semuaManajer();
+    	    System.out.println("===========================");
+    	    for (Tim t : timList) {
+    	        t.tampilkanInfo(pelatihList, manajerList, olahragaList);
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Tim Berdasarkan ID: ");
+    	    int id_tim = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Tim tim = listEntitas.tampilkanTim(id_tim).orElse(null);
+    	    
+    	    System.out.println("===========================");
+    	    System.out.println("Edit Tim");
+    	    System.out.println("===========================");
+    	    System.out.print("Edit Nama Tim: ");
+    	    String nama = scanner.next();
+    	    System.out.print("Edit Kota Asal: ");
+    	    String kota_asal = scanner.next();
+    	    System.out.print("Edit Jumlah Pemain: ");
+    	    int jumlah_pemain = scanner.nextInt();
+    	    if (pelatihList.isEmpty()) {
+    	        id_pelatih = 0;
+    	    }
+    	    else {
+        	    for (Pelatih p : pelatihList) {
+        	        System.out.println("[" + Count + "]. " + p.getNama() + ", ID: " + p.getIdPelatih());
+        	        Count++;
+        	    }
+        	    System.out.print("Pilih Pelatih Berdasarkan ID: ");
+        	    id_pelatih = scanner.nextInt();
+    	    }
+    	    Count = 1;
+    	    if (olahragaList.isEmpty()) {
+    	        id_olahraga = 0;
+    	    }
+    	    else {
+        	    for (Olahraga o : olahragaList) {
+        	        System.out.println("[" + Count + "]. " + o.getNamaOlahraga() + ", ID: " + o.getIdOlahraga());
+        	        Count++;
+        	    }
+        	    System.out.print("Pilih Olahraga Berdasarkan ID: ");
+        	    id_olahraga = scanner.nextInt();
+    	    }
+    	    Count = 1;
+    	    if (manajerList.isEmpty()) {
+    	        id_manajer = 0;
+    	    }
+    	    else {
+        	    for (Manajer m : manajerList) {
+        	        System.out.println("[" + Count + "]. " + m.getNama() + ", ID: " + m.getIdManajer());
+        	        Count++;
+        	    }
+        	    System.out.print("Pilih Manajer Berdasarkan ID: ");
+        	    id_manajer = scanner.nextInt();
+    	    }
+    	    
+    	    tim.setNamaTim(nama);
+    	    tim.setKotaAsal(kota_asal);
+    	    tim.setJumlahPemain(jumlah_pemain);
+    	    tim.setIdPelatih(id_pelatih);
+    	    tim.setIdManajer(id_manajer);
+    	    tim.setIdOlahraga(id_olahraga);
+    	    boolean isUpdate = listEntitas.updateTim(tim);
+    	    if (isUpdate == true) {
+    	        System.out.println("Berhasil Di Update");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukam");
+    	    }
+	    }
+	}
+	public static void editDataPemain(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaPemain().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    int id_tim;
+    	    int Count = 1;
+    	    List<Pemain> pemainList = listEntitas.semuaPemain();
+    	    List<Tim> timList = listEntitas.semuaTim();
+    	    System.out.println("===========================");
+    	    for (Pemain p : pemainList) {
+    	        p.tampilkanInfo(timList);
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Pemain Berdasarkan ID: ");
+    	    int id_pemain = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Pemain pemain = listEntitas.tampilkanPemain(id_pemain).orElse(null);
+    	    Tim t2 = listEntitas.tampilkanTim(pemain.getIdTim()).orElse(null);
+    	    
+    	    System.out.println("===========================");
+    	    System.out.println("Edit Pemain");
+    	    System.out.println("===========================");
+    	    System.out.print("Edit Nama Pemain: ");
+    	    String nama = scanner.next();
+    	    System.out.print("Edit Usia: ");
+    	    int usia = scanner.nextInt();
+    	    scanner.nextLine();
+    	    System.out.print("Edit Posisi: ");
+    	    String posisi = scanner.next();
+    	    System.out.print("Edit Nomor Telepon: ");
+    	    String nomor = scanner.next();
+    	    if (timList.isEmpty()) {
+    	        id_tim = 0;
+    	    }
+    	    else {
+        	    for (Tim t : timList) {
+        	        System.out.println("[" + Count + "]. " + t.getNamaTim() + ", ID: " + t.getIdTim());
+        	        Count++;
+        	    }
+        	    System.out.print("Pilih Tim Berdasarkan ID: ");
+        	    id_tim = scanner.nextInt();
+        	    
+        	    for (Tim t : timList) {
+        	        if (t.getIdTim() == id_tim && id_tim != pemain.getIdTim()) {
+        	            t.setJumlahPemain(t.getJumlahPemain() + 1);
+        	            if (t2 != null) {
+            	            t2.setJumlahPemain(t2.getJumlahPemain() - 1);
+        	            }
+        	            break;
+        	        }
+        	    }
+    	    }
+    	    
+    	    pemain.setNama(nama);
+    	    pemain.setUsia(usia);
+    	    pemain.setPosisi(posisi);
+    	    pemain.setNomorTelepon(nomor);
+    	    pemain.setIdTim(id_tim);
+    	    boolean isUpdate = listEntitas.updatePemain(pemain);
+    	    if (isUpdate == true) {
+    	        System.out.println("Berhasil Di Update");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukam");
+    	    }
+	    }
+	}
+	public static void editDataPelatih(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaPelatih().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Pelatih> pelatihList = listEntitas.semuaPelatih();
+    	    System.out.println("===========================");
+    	    for (Pelatih p : pelatihList) {
+    	        p.tampilkanInfo();
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Pelatih Berdasarkan ID: ");
+    	    int id_pelatih = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Pelatih pelatih = listEntitas.tampilkanPelatih(id_pelatih).orElse(null);
+    	    
+    	    System.out.println("===========================");
+    	    System.out.println("Edit Pelatih");
+    	    System.out.println("===========================");
+    	    System.out.print("Edit Nama Pelatih: ");
+    	    String nama = scanner.next();
+    	    System.out.print("Edit Usia: ");
+    	    int usia = scanner.nextInt();
+    	    scanner.nextLine();
+    	    System.out.print("Edit Nomor Telepon: ");
+    	    String nomor = scanner.next();
+    	    
+    	    pelatih.setNama(nama);
+    	    pelatih.setUsia(usia);
+    	    pelatih.setNomorTelepon(nomor);
+    	    boolean isUpdate = listEntitas.updatePelatih(pelatih);
+    	    if (isUpdate == true) {
+    	        System.out.println("Berhasil Di Update");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukam");
+    	    }
+	    }
+	}
+	public static void editDataManajer(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaManajer().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Manajer> manajerList = listEntitas.semuaManajer();
+    	    System.out.println("===========================");
+    	    for (Manajer m : manajerList) {
+    	        m.tampilkanInfo();
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Manajer Berdasarkan ID: ");
+    	    int id_manajer = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Manajer manajer = listEntitas.tampilkanManajer(id_manajer).orElse(null);
+    	    
+    	    System.out.println("===========================");
+    	    System.out.println("Edit Manajer");
+    	    System.out.println("===========================");
+    	    System.out.print("Edit Nama Manajer: ");
+    	    String nama = scanner.next();
+    	    System.out.print("Edit Usia: ");
+    	    int usia = scanner.nextInt();
+    	    scanner.nextLine();
+    	    System.out.print("Edit Nomor Telepon: ");
+    	    String nomor = scanner.next();
+    	    
+    	    manajer.setNama(nama);
+    	    manajer.setUsia(usia);
+    	    manajer.setNomorTelepon(nomor);
+    	    boolean isUpdate = listEntitas.updateManajer(manajer);
+    	    if (isUpdate == true) {
+    	        System.out.println("Berhasil Di Update");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukam");
+    	    }
+	    }
+	}
+	public static void editDataOlahraga(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaOlahraga().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+    	    System.out.println("===========================");
+    	    for (Olahraga o : olahragaList) {
+    	        o.tampilkanInfo();
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Olahraga Berdasarkan ID: ");
+    	    int id_olahraga = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    Olahraga olahraga = listEntitas.tampilkanOlahraga(id_olahraga).orElse(null);
+    	    
+    	    System.out.println("===========================");
+    	    System.out.println("Edit Olahraga");
+    	    System.out.println("===========================");
+    	    System.out.print("Edit Nama Olahraga: ");
+    	    String nama = scanner.next();
+    	    
+    	    olahraga.setNamaOlahraga(nama);
+    	    boolean isUpdate = listEntitas.updateOlahraga(olahraga);
+    	    if (isUpdate == true) {
+    	        System.out.println("Berhasil Di Update");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukam");
+    	    }
+	    }
+	}
+	public static void editDataJadwal(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaJadwalLatihan().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    int id_tim, id_olahraga;
+    	    int Count = 1;
+    	    List<JadwalLatihan> jadwalList = listEntitas.semuaJadwalLatihan();
+    	    List<Tim> timList = listEntitas.semuaTim();
+    	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+    	    System.out.println("===========================");
+    	    for (JadwalLatihan j : jadwalList) {
+    	        j.tampilkanInfo(timList, olahragaList);
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Jadwal Berdasarkan ID: ");
+    	    int id_jadwal = scanner.nextInt();
+    	    System.out.println("===========================");
+    	    JadwalLatihan jadwal = listEntitas.tampilkanJadwalLatihan(id_jadwal).orElse(null);
+    	    
+    	    System.out.println("===========================");
+    	    System.out.println("Edit Jadwal Latihan");
+    	    System.out.println("===========================");
+    	    System.out.print("Edit Tanggal: ");
+    	    String tanggal = scanner.next();
+    	    System.out.print("Edit Waktu: ");
+    	    String waktu = scanner.next();
+    	    System.out.print("Edit Lokasi: ");
+    	    String lokasi = scanner.next();
+    	    if (timList.isEmpty()) {
+    	        id_tim = 0;
+    	    }
+    	    else {
+        	    for (Tim t : timList) {
+        	        System.out.println("[" + Count + "]. " + t.getNamaTim() + ", ID: " + t.getIdTim());
+        	        Count++;
+        	    }
+        	    System.out.print("Pilih Tim Berdasarkan ID: ");
+        	    id_tim = scanner.nextInt();
+    	    }
+    	    Count = 1;
+    	    if (olahragaList.isEmpty()) {
+    	        id_olahraga = 0;
+    	    }
+    	    else {
+        	    for (Olahraga o : olahragaList) {
+        	        System.out.println("[" + Count + "]. " + o.getNamaOlahraga() + ", ID: " + o.getIdOlahraga());
+        	        Count++;
+        	    }
+        	    System.out.print("Pilih Olahraga Berdasarkan ID: ");
+        	    id_olahraga = scanner.nextInt();
+    	    }
+    	    
+    	    jadwal.setTanggal(tanggal);
+    	    jadwal.setWaktu(waktu);
+    	    jadwal.setLokasi(lokasi);
+    	    jadwal.setIdTim(id_tim);
+    	    jadwal.setIdOlahraga(id_olahraga);
+    	    boolean isUpdate = listEntitas.updateJadwalLatihan(jadwal);
+    	    if (isUpdate == true) {
+    	        System.out.println("Berhasil Di Update");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukam");
+    	    }
+	    }
+	}
+	public static void hapusTim(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaTim().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Tim> timList = listEntitas.semuaTim();
+    	    List<Pelatih> pelatihList = listEntitas.semuaPelatih();
+    	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+    	    List<Manajer> manajerList = listEntitas.semuaManajer();
+    	    System.out.println("===========================");
+    	    for (Tim t : timList) {
+    	        t.tampilkanInfo(pelatihList, manajerList, olahragaList);
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.println("Apabila Tim Dihapus, Pemain Yang Ada Dalam Tim Dan Jadwal Latihan Yang Berkaitan Juga Akan Ikut Terhapus");
+    	    System.out.print("Pilih Tim Yang Akan Dihapus Berdasarkan ID: ");
+    	    int id_tim = scanner.nextInt();
+    	    boolean isDelete = listEntitas.deleteTim(id_tim);
+    	    if (isDelete == true) {
+    	        System.out.println("Berhasil Dihapus");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukan");
+    	    }
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void hapusPemain(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaPemain().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Tim> timList = listEntitas.semuaTim();
+    	    List<Pemain> pemainList = listEntitas.semuaPemain();
+    	    System.out.println("===========================");
+    	    for (Pemain p : pemainList) {
+    	        p.tampilkanInfo(timList);
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Pemain Yang Akan Dihapus Berdasarkan ID: ");
+    	    int id_pemain = scanner.nextInt();
+    	    boolean isDelete = listEntitas.deletePemain(id_pemain);
+    	    if (isDelete == true) {
+    	        System.out.println("Berhasil Dihapus");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukan");
+    	    }
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void hapusPelatih(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaPelatih().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Pelatih> pelatihList = listEntitas.semuaPelatih();
+    	    System.out.println("===========================");
+    	    for (Pelatih p : pelatihList) {
+    	        p.tampilkanInfo();
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.println("Apabila Pelatih Dihapus, Maka Tim Yang Dilatih Pelatih Tersebut Tidak Akan Memiliki Pelatih Alias Tidak Ada Keterangan");
+    	    System.out.print("Pilih Pelatih Yang Akan Dihapus Berdasarkan ID: ");
+    	    int id_pelatih = scanner.nextInt();
+    	    boolean isDelete = listEntitas.deletePelatih(id_pelatih);
+    	    if (isDelete == true) {
+    	        System.out.println("Berhasil Dihapus");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukan");
+    	    }
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void hapusManajer(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaManajer().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Manajer> manajerList = listEntitas.semuaManajer();
+    	    System.out.println("===========================");
+    	    for (Manajer m : manajerList) {
+    	        m.tampilkanInfo();
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.println("Apabila Manajer Dihapus, Maka Tim Yang Di Manajemen Manager Tersebut Akan Terhapus");
+    	    System.out.print("Pilih Manajer Yang Akan Dihapus Berdasarkan ID: ");
+    	    int id_manajer = scanner.nextInt();
+    	    boolean isDelete = listEntitas.deleteManajer(id_manajer);
+    	    if (isDelete == true) {
+    	        System.out.println("Berhasil Dihapus");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukan");
+    	    }
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void hapusOlahraga(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaOlahraga().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+    	    System.out.println("===========================");
+    	    for (Olahraga o : olahragaList) {
+    	        o.tampilkanInfo();
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.println("Apabila Jenis Olahraga Dihapus, Maka Tim Yang Berjenis Olahraga Tersebut Tidak Akan Memiliki Jenis Olahraga, Begitu Juga Dengan Jadwal Latihan");
+    	    System.out.print("Pilih Olahraga Yang Akan Dihapus Berdasarkan ID: ");
+    	    int id_olahraga = scanner.nextInt();
+    	    boolean isDelete = listEntitas.deleteOlahraga(id_olahraga);
+    	    if (isDelete == true) {
+    	        System.out.println("Berhasil Dihapus");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukan");
+    	    }
+    	    System.out.println("===========================");
+	    }
+	}
+	public static void hapusJadwal(Scanner scanner, ListEntitas listEntitas) {
+	    if (listEntitas.semuaJadwalLatihan().isEmpty()) {
+	        System.out.println("===========================");
+	        System.out.println("List Kosong");
+	        System.out.println("===========================");
+	    }
+	    else {
+    	    List<Tim> timList = listEntitas.semuaTim();
+    	    List<Olahraga> olahragaList = listEntitas.semuaOlahraga();
+    	    List<JadwalLatihan> jadwalList = listEntitas.semuaJadwalLatihan();
+    	    System.out.println("===========================");
+    	    for (JadwalLatihan j : jadwalList) {
+    	        j.tampilkanInfo(timList, olahragaList);
+    	    }
+    	    System.out.println("===========================");
+    	    System.out.print("Pilih Jadwal Yang Akan Dihapus Berdasarkan ID: ");
+    	    int id_jadwal = scanner.nextInt();
+    	    boolean isDelete = listEntitas.deleteJadwalLatihan(id_jadwal);
+    	    if (isDelete == true) {
+    	        System.out.println("Berhasil Dihapus");
+    	    }
+    	    else {
+    	        System.out.println("Data Tidak Ditemukan");
+    	    }
+    	    System.out.println("===========================");
+	    }
+	}
+
+perbaiki juga kode ini, hanya perbaiki bagian dimana class abtract infonya jadi tidak bia mengakses
