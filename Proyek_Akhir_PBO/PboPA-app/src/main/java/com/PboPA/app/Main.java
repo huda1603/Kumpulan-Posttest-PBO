@@ -122,6 +122,10 @@ class AlatMusikManajer {
     }
     
     public void editAlat() {
+	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            return;
+        }
         Drum d;Gitar g;String nama_alat;
         tampilkanSemuaAlat(true);
         int id_alat = inputInteger("Pilih Alat Musik Berdasarkan ID: ");
@@ -152,6 +156,10 @@ class AlatMusikManajer {
     }
     
     public void hapusAlat() {
+	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            return;
+        }
         String nama_alat;
         tampilkanSemuaAlat(true);
         int id_alat = inputInteger("Pilih Alat Musik Berdasarkan ID: ");
@@ -172,6 +180,10 @@ class AlatMusikManajer {
     }
     
     public void tampilkanSalahSatuAlat() {
+	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            return;
+        }
         tampilkanSemuaAlat(false);
         int id_alat = inputInteger("Pilih Alat Musik Berdasarkan ID: ");
         Optional<Object> obj = itemMusik(id_alat);
@@ -224,6 +236,10 @@ class AlatMusikManajer {
     }
     
     public void cariAlat() {
+	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            return;
+        }
         List<Object> listDrum = listAlat.get("Drum");
         List<Object> listGitar = listAlat.get("Gitar");
         Scanner scanner = new Scanner(System.in);
@@ -266,6 +282,10 @@ class AlatMusikManajer {
     }
     
     public void urutkanAlat() {
+	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            return;
+        }
         List<Object> listDrum = listAlat.get("Drum");
         List<Object> listGitar = listAlat.get("Gitar");
         Scanner scanner = new Scanner(System.in);
@@ -469,6 +489,10 @@ class AlatMusikManajer {
     }
 
     public void nyalakanAlatMusik() {
+	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            return;
+        }
         tampilkanSemuaAlat(false);
         int id_alat = inputInteger("Pilih Alat Musik Berdasarkan ID: ");
         Optional<Object> obj = itemMusik(id_alat);
