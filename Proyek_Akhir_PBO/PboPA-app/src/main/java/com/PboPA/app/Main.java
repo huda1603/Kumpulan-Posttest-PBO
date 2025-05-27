@@ -27,13 +27,13 @@ abstract class AlatMusik implements musikkk {
     public String getNamaAlat() {
         return nama_alat;
     }
-    public void setNamaAlat(String nama_alat) {
+    protected void setNamaAlat(String nama_alat) {
         this.nama_alat = nama_alat;
     }
     public Double getHarga() {
         return harga;
     }
-    public void setHarga(Double harga) {
+    protected void setHarga(Double harga) {
         this.harga = harga;
     }
     public String getKategori() {
@@ -123,7 +123,7 @@ class AlatMusikManajer {
     
     public void editAlat() {
 	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
-            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Edit");
             return;
         }
         Drum d;Gitar g;String nama_alat;
@@ -157,7 +157,7 @@ class AlatMusikManajer {
     
     public void hapusAlat() {
 	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
-            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Hapus");
             return;
         }
         String nama_alat;
@@ -181,7 +181,7 @@ class AlatMusikManajer {
     
     public void tampilkanSalahSatuAlat() {
 	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
-            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Tampilkan");
             return;
         }
         tampilkanSemuaAlat(false);
@@ -237,7 +237,7 @@ class AlatMusikManajer {
     
     public void cariAlat() {
 	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
-            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Cari");
             return;
         }
         List<Object> listDrum = listAlat.get("Drum");
@@ -490,7 +490,7 @@ class AlatMusikManajer {
 
     public void nyalakanAlatMusik() {
 	if (listAlat.get("Drum").isEmpty() && listAlat.get("Gitar").isEmpty()) {
-            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Urutkan");
+            System.out.println("Tidak Ada Alat Musik Yang Tersedia Untuk Di Nyalakan");
             return;
         }
         tampilkanSemuaAlat(false);
@@ -665,12 +665,14 @@ public class Main {
              System.out.println("0. Keluar");
              try {
                  System.out.print("Pilih Menu: ");
-                 menu = scanner.nextInt();
+		 String pilihMenu = scanner.next();
+		 scanner.nextLine();
+                 menu = Integer.parseInt(pilihMenu);
                  if (menu < 0 || menu > 10) {
                      throw new Exception();
                  }
              } catch (Exception e) {
-                 System.out.println("Input Tidak Valid, Pilih 0 - 9");
+                 System.out.println("Input Tidak Valid, Pilih 0 - 10");
                  continue;
              }
              switch (menu) {
